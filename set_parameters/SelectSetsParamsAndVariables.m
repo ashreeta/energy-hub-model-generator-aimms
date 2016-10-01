@@ -2,9 +2,9 @@
 
 % INITIALLY, SET ALL SELECTIONS TO ZERO
 create_time_set = 0;
-create_inputs_set = 0;
-create_outputs_set = 0;
-create_storage_set = 0;
+create_conversion_techs_set = 0;
+create_energy_carriers_set = 0;
+create_storage_techs_set = 0;
 create_param_loads = 0;
 create_param_operating_costs = 0;
 create_param_operating_costs_grid = 0;
@@ -49,6 +49,18 @@ create_variable_storage_soc = 0;
 create_variable_storage_capacity = 0;
 create_variable_storage_installation = 0;
 create_objectivefn_operating_cost_grid = 0;
+create_variable_energy_demands = 0;
+create_variable_operating_cost_per_technology = 0;
+create_variable_maintenance_cost_per_technology = 0;
+create_variable_capital_cost_per_technology = 0;
+create_variable_total_cost_per_technology = 0;
+create_variable_total_cost_grid = 0;
+create_variable_capital_cost_per_storage = 0;
+create_variable_total_cost_per_storage = 0;
+create_variable_total_carbon_per_technology = 0;
+create_variable_total_carbon_per_timestep = 0;
+create_variable_total_cost_per_technology_without_capital_costs = 0;
+create_variable_total_cost_per_storage_without_capital_costs = 0;
 
 %% SELECT FORM OF STORAGE REPRESENTATION
 
@@ -64,12 +76,12 @@ end
 
 %these sets should always be created
 create_time_set = 1;
-create_inputs_set = 1;
-create_outputs_set = 1;
+create_conversion_techs_set = 1;
+create_energy_carriers_set = 1;
 
 %to be created if there are storage technologies
 if isempty(energy_storage_technologies) == 0 && simplified_storage_representation == 0
-    create_storage_set = 1;
+    create_storage_techs_set = 1;
 end
     
 %% SELECT PARAMS
@@ -167,7 +179,7 @@ if isempty(technologies.conversion_techs_names) == 0 && select_techs_and_do_sizi
 end
 
 %to be created if there are storage techs
-if isempty(technologies.conversion_techs_names) == 0
+if isempty(technologies.storage_techs_names) == 0
     create_variable_storage_charge_rate = 1;
     create_variable_storage_discharge_rate = 1;
     create_variable_storage_soc = 1;
@@ -178,3 +190,44 @@ if isempty(technologies.conversion_techs_names) == 0
         create_variable_storage_installation = 1;
     end
 end
+
+%% SELECT OUTPUT VARIABLES
+
+if print_demand_data == 1
+    create_variable_energy_demands = 1;
+end
+
+if print_cost_data == 1
+    
+    if isempty(technologies.conversion_techs_names) == 0
+        create_variable_operating_cost_per_technology = 1;
+        create_variable_maintenance_cost_per_technology = 1;
+    end
+    
+    if grid_connected_system == 1
+        create_variable_total_cost_grid = 1;
+    end
+    
+    if select_techs_and_do_sizing == 1
+        create_variable_capital_cost_per_technology = 1;
+        create_variable_total_cost_per_technology = 1;
+        if isempty(technologies.storage_techs_names) == 0
+            create_variable_capital_cost_per_storage = 1;
+            create_variable_total_cost_per_storage = 1;
+        end
+    else
+        create_variable_total_cost_per_technology_without_capital_costs = 1;
+        if isempty(technologies.storage_techs_names) == 0
+            create_variable_total_cost_per_storage_without_capital_costs = 1;
+        end
+    end   
+end
+
+if print_emissions_data == 1
+    create_variable_total_carbon_per_technology = 1;
+    create_variable_total_carbon_per_timestep = 1;
+end
+
+
+
+

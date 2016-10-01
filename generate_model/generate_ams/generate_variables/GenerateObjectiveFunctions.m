@@ -1,7 +1,5 @@
 %% GENERATE OBJECTIVE FUNCTIONS FOR AMS FILE
 
-header_objective_functions_declaration_section = '\n\tDeclarationSection Objective_fncts {';
-
 %equation for operating cost for grid
 objectivefn_operating_cost_grid = '';
 if create_objectivefn_operating_cost_grid
@@ -68,8 +66,6 @@ end
 %equation for total carbon
 objectivefn_total_carbon = '\n\t\tVariable Total_carbon {\n\t\t\tRange: free;\n\t\t\tDefinition: sum(conv,Technology_carbon_factors(conv)*sum(t,Input_energy(t,conv)));\n\t\t}';
 
-footer_objective_functions_declaration_section = '\n\t}';
-
 %compile objective functions to string
-objective_functions_section = strcat(header_objective_functions_declaration_section,objectivefn_operating_cost_grid,objectivefn_operating_cost,objectivefn_maintenance_cost,objectivefn_maintenance_cost_per_timestep,...
-    objectivefn_income_via_exports,objectivefn_capital_cost,objectivefn_total_cost,objectivefn_total_carbon,footer_objective_functions_declaration_section);
+objective_functions_section = strcat(objective_functions_section,objectivefn_operating_cost_grid,objectivefn_operating_cost,objectivefn_maintenance_cost,objectivefn_maintenance_cost_per_timestep,...
+    objectivefn_income_via_exports,objectivefn_capital_cost,objectivefn_total_cost,objectivefn_total_carbon);

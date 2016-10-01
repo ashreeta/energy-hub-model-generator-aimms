@@ -6,12 +6,12 @@
 % INITIALLY, SET ALL THE CONSTRAINTS TO ZERO
 apply_constraint_energy_balance = 0;
 apply_constraint_capacity = 0;
-apply_constraint_min_part_load1 = 0;
-apply_constraint_min_part_load2 = 0;
+apply_constraint_dispatch = 0;
+apply_constraint_min_part_load = 0;
 apply_constraint_solar_availability = 0;
 apply_constraint_roof_area = 0;
 apply_constraint_max_capacity = 0;
-apply_constraint_fixed_cost = 0;
+apply_constraint_installation = 0;
 apply_constraint_operation = 0;
 apply_constraint_electricity_export = 0;
 apply_constraint_htp_ratio = 0;
@@ -40,8 +40,8 @@ apply_constraint_max_carbon = 0;
 if isempty(technologies.conversion_techs_names) == 0
     apply_constraint_energy_balance = 1;
     apply_constraint_capacity = 1;
-    apply_constraint_min_part_load1 = 1;
-    apply_constraint_min_part_load2 = 1;
+    apply_constraint_dispatch = 1;
+    apply_constraint_min_part_load = 1;
     
     %only applicable if the system is grid connected
     if grid_connected_system == 1
@@ -57,7 +57,7 @@ if isempty(technologies.conversion_techs_names) == 0
     %only applicable if you're doing sizing & tech selection of conversion techs
     if select_techs_and_do_sizing == 1
         apply_constraint_max_capacity = 1;
-        apply_constraint_fixed_cost = 1;
+        apply_constraint_installation = 1;
         apply_constraint_operation = 1;
     end
 
@@ -69,7 +69,8 @@ if isempty(technologies.conversion_techs_names) == 0
     end
 end
 
-if isempty(technologies.conversion_techs_names) == 0
+if isempty(technologies.storage_techs_names) == 0
+    
     %only applicable if you're considering storage techs
     apply_constraint_energy_balance_storage = 1;
     apply_constraint_max_charging_rate_storage = 1;
