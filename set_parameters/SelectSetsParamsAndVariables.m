@@ -46,21 +46,30 @@ create_param_carbon_factors = 0;
 create_param_max_carbon = 0;
 create_param_solar_radiation = 0;
 create_param_big_M = 0;
+create_param_installed_conversion_technologies = 0;
+create_param_installed_storage_technologies = 0;
+create_param_link_installation = 0;
+create_param_link_lengths = 0;
+create_param_link_losses = 0;
+create_param_link_capacity = 0;
+
 create_variable_input_streams = 0;
 create_variable_electricity_output = 0;
 create_variable_heat_output = 0;
 create_variable_cool_output = 0;
+create_variable_dhw_output = 0;
+create_variable_anergy_output = 0;
 create_variable_exported_energy = 0;
 create_variable_technology_installation = 0;
 create_variable_technology_operation = 0;
 create_variable_technology_capacity = 0;
+create_variable_grid_capacity = 0;
 create_variable_storage_charge_rate = 0;
 create_variable_storage_discharge_rate = 0;
 create_variable_storage_soc = 0;
 create_variable_storage_capacity = 0;
 create_variable_storage_installation = 0;
 create_variable_storage_temperature = 0;
-create_objectivefn_operating_cost_grid = 0;
 create_variable_energy_demands = 0;
 create_variable_operating_cost_per_technology = 0;
 create_variable_maintenance_cost_per_technology = 0;
@@ -72,8 +81,18 @@ create_variable_total_cost_per_storage = 0;
 create_variable_total_carbon_per_technology = 0;
 create_variable_total_carbon_per_timestep = 0;
 create_variable_total_cost_per_technology_without_capital_costs = 0;
-create_variable_total_cost_per_storage_without_capital_costs = 0;
-create_variable_interhub_exchanged_energy = 0;
+create_variable_total_cost_grid_without_capital_costs = 0;
+create_variable_link_flows = 0;
+create_variable_link_operation = 0;
+create_variable_link_losses = 0;
+create_objectivefn_operating_cost_grid = 0;
+create_objectivefn_operating_cost = 0;
+create_objectivefn_maintenance_cost = 0;
+create_objectivefn_maintenance_cost_per_timestep = 0;
+create_objectivefn_income_via_exports = 0;
+create_objectivefn_capital_cost = 0;
+create_objectivefn_total_carbon = 0;
+create_objectivefn_total_cost = 0;
 
 %% SELECT FORM OF STORAGE REPRESENTATION
 
@@ -104,8 +123,6 @@ end
 %% SELECT PARAMS
 %these params should always be created
 create_param_loads = 1;
-create_param_int_rate = 1;
-create_param_lifetimes = 1;
 create_param_C_matrix = 1;
 create_param_big_M = 1;
 
@@ -130,12 +147,14 @@ end
 %to be created if there are energy conversion techs
 if isempty(technologies.conversion_techs_names) == 0
     create_param_OMV_costs = 1;
-    create_param_linear_capital_costs = 1;
-    create_param_fixed_capital_costs = 1;
-    create_param_technology_CRF = 1;
     create_param_minimum_part_load = 1;
     create_param_carbon_factors = 1;
     create_param_operating_costs = 1;
+
+    %to be created if there are pre-installed conversion techs & you're doing selection/sizing
+    if isempty(installed_technologies.conversion_techs_names) == 0 && select_techs_and_do_sizing == 1
+        create_param_installed_conversion_technologies = 1;
+    end
         
     %to be created if there are conversion techs and we're not doing selection/sizing
     if select_techs_and_do_sizing == 0
@@ -144,6 +163,11 @@ if isempty(technologies.conversion_techs_names) == 0
     
     %to be created if there are conversion techs and we're doing selection/sizing
     if select_techs_and_do_sizing == 1
+        create_param_linear_capital_costs = 1;
+        create_param_fixed_capital_costs = 1;
+        create_param_technology_CRF = 1;
+        create_param_int_rate = 1;
+        create_param_lifetimes = 1;
         create_param_minimum_capacities = 1;
         create_param_maximum_capacities = 1;
     end
@@ -151,10 +175,6 @@ end
 
 %to be created if there are storage techs
 if isempty(technologies.storage_techs_names) == 0
-    create_param_linear_storage_costs = 1;
-    create_param_fixed_storage_costs = 1;
-    create_param_storage_lifetimes = 1;
-    create_param_storage_CRF = 1;
     create_param_S_matrix = 1;
     create_param_max_charge_rate = 1;
     create_param_max_discharge_rate = 1;
@@ -170,6 +190,11 @@ if isempty(technologies.storage_techs_names) == 0
         create_param_thermal_storage_specific_heat = 1;
     end
 
+    %to be created if there are pre-installed storage techs and we're doing selection/sizing
+    if isempty(installed_technologies.storage_techs_names) == 0 && select_techs_and_do_sizing == 1
+        create_param_installed_storage_technologies = 1;
+    end
+
     %to be created if there are storage techs and we're not doing selection/sizing
     if select_techs_and_do_sizing == 0
         create_param_storage_capacity = 1;
@@ -177,6 +202,11 @@ if isempty(technologies.storage_techs_names) == 0
     
     %to be created if there are storage techs and we're doing selection/sizing
     if select_techs_and_do_sizing == 1
+        create_param_linear_storage_costs = 1;
+        create_param_fixed_storage_costs = 1;
+        create_param_storage_lifetimes = 1;
+        create_param_storage_CRF = 1;
+        create_param_int_rate = 1;
         create_param_min_capacity_storage = 1;
         create_param_max_capacity_storage = 1;
     end
@@ -184,8 +214,18 @@ end
 
 %to be created if there are solar techs
 if isempty(solar_technologies) == 0
-    create_param_roof_area = 1;
     create_param_solar_radiation = 1;
+    if select_techs_and_do_sizing == 1
+        create_param_roof_area = 1;
+    end
+end
+
+%to be created if therea re multiple hubs
+if multiple_hubs == 1
+    create_param_link_installation = 1;
+    create_param_link_lengths = 1;
+    create_param_link_losses = 1;
+    create_param_link_capacity = 1;
 end
 
 %to be created if there is a carbon limit
@@ -197,6 +237,11 @@ end
 
 %these variables should always be created
 create_variable_input_streams = 1;
+create_objectivefn_operating_cost = 1;
+create_objectivefn_maintenance_cost = 1;
+create_objectivefn_maintenance_cost_per_timestep = 1;
+create_objectivefn_total_carbon = 1;
+create_objectivefn_total_cost = 1;
 
 %these variables should be created depending on the energy outputs
 if ismember('Elec',technologies.conversion_techs_outputs) == 1
@@ -208,10 +253,17 @@ end
 if ismember('Cool',technologies.conversion_techs_outputs) == 1
     create_variable_cool_output = 1;
 end
+if ismember('DHW',technologies.conversion_techs_outputs) == 1
+    create_variable_dhw_output = 1;
+end
+if ismember('Anergy',technologies.conversion_techs_outputs) == 1
+    create_variable_anergy_output = 1;
+end
 
 %to be created if the system is grid connected
 if grid_connected_system == 1
     create_variable_exported_energy = 1;
+    create_objectivefn_income_via_exports = 1;
 end
 
 %to be created if the system is grid connected and we're doing selection/sizing
@@ -221,7 +273,9 @@ end
 
 %to be created if there are multiple hubs
 if multiple_hubs == 1
-    create_variable_interhub_exchanged_energy = 1;
+    create_variable_link_flows = 1;
+    create_variable_link_operation = 1;
+    create_variable_link_losses = 1;
 end
 
 %to be created if there are dispatchable conversion techs
@@ -233,6 +287,7 @@ end
 if isempty(technologies.conversion_techs_names) == 0 && select_techs_and_do_sizing == 1
     create_variable_technology_installation = 1;
     create_variable_technology_capacity = 1;
+    create_objectivefn_capital_cost = 1;
 end
 
 %to be created if there are storage techs
@@ -267,21 +322,23 @@ if print_cost_data == 1
     end
     
     if grid_connected_system == 1
-        create_variable_total_cost_grid = 1;
+        if select_techs_and_do_sizing == 1
+            create_variable_total_cost_grid = 1;
+        else
+            create_variable_total_cost_grid_without_capital_costs = 1;
+        end
     end
     
     if select_techs_and_do_sizing == 1
         create_variable_capital_cost_per_technology = 1;
         create_variable_total_cost_per_technology = 1;
+        
         if isempty(technologies.storage_techs_names) == 0
             create_variable_capital_cost_per_storage = 1;
             create_variable_total_cost_per_storage = 1;
         end
     else
         create_variable_total_cost_per_technology_without_capital_costs = 1;
-        if isempty(technologies.storage_techs_names) == 0
-            create_variable_total_cost_per_storage_without_capital_costs = 1;
-        end
     end   
 end
 

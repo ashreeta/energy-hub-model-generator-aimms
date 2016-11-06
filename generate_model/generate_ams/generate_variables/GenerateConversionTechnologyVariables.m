@@ -34,11 +34,10 @@ end
 %binary variable denoting the operation or not of a dispatchable technology
 variable_technology_operation = '';
 if create_variable_technology_operation == 1
-    dispatchable_techs_including_grid = technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_inputs,'Solar')));
     index_domain_string = '';
-    for t=1:length(dispatchable_techs_including_grid)
-        index_domain_string = strcat(index_domain_string,'''',char(dispatchable_techs_including_grid(t)),'''');
-        if t < length(dispatchable_techs_including_grid)
+    for t=1:length(technologies_excluding_grid)
+        index_domain_string = strcat(index_domain_string,'''',char(technologies_excluding_grid(t)),'''');
+        if t < length(technologies_excluding_grid)
              index_domain_string = strcat(index_domain_string,' OR conv = '); 
         end
     end
@@ -95,6 +94,26 @@ if create_variable_cool_output == 1
     end
 end
 
+%variable denoting the dhw output energy of a technology
+variable_dhw_output = '';
+if create_variable_dhw_output == 1
+    if multiple_hubs == 0
+        variable_dhw_output = '\n\t\tVariable Output_energy_DHW {\n\t\t\tIndexDomain: (t,conv) | Cmatrix(''DHW'',conv) > 0;\n\t\t\tRange: nonnegative;\n\t\t\tDefinition: Input_energy(t,conv) * Cmatrix(''DHW'',conv);\n\t\t}';
+    else
+        variable_dhw_output = '\n\t\tVariable Output_energy_DHW {\n\t\t\tIndexDomain: (t,conv,h) | Cmatrix(''DHW'',conv) > 0;\n\t\t\tRange: nonnegative;\n\t\t\tDefinition: Input_energy(t,conv,h) * Cmatrix(''DHW'',conv);\n\t\t}';
+    end
+end
+
+%variable denoting the anergy output energy of a technology
+variable_anergy_output = '';
+if create_variable_anergy_output == 1
+    if multiple_hubs == 0
+        variable_anergy_output = '\n\t\tVariable Output_energy_anergy {\n\t\t\tIndexDomain: (t,conv) | Cmatrix(''Anergy'',conv) > 0;\n\t\t\tRange: nonnegative;\n\t\t\tDefinition: Input_energy(t,conv) * Cmatrix(''Anergy'',conv);\n\t\t}';
+    else
+        variable_anergy_output = '\n\t\tVariable Output_energy_anergy {\n\t\t\tIndexDomain: (t,conv,h) | Cmatrix(''Anergy'',conv) > 0;\n\t\t\tRange: nonnegative;\n\t\t\tDefinition: Input_energy(t,conv,h) * Cmatrix(''Anergy'',conv);\n\t\t}';
+    end
+end
+
 variable_operating_cost_per_technology = '';
 if create_variable_operating_cost_per_technology
     if multiple_hubs == 0
@@ -134,10 +153,15 @@ end
 
 variable_total_cost_grid = '';
 if create_variable_total_cost_grid
-    variable_total_cost_grid = '\n\t\tVariable Total_cost_grid {\n\t\t\tRange: free;\n\t\t\tDefinition: sum(conv | conv = ''Grid'',Capital_cost_per_technology(conv) + Operating_cost_grid + Maintenance_cost_per_technology(conv));\n\t\t}';
+    variable_total_cost_grid = '\n\t\tVariable Total_cost_grid {\n\t\t\tRange: free;\n\t\t\tDefinition: sum(conv | conv = ''Grid'', Capital_cost_per_technology(conv) + Operating_cost_grid + Maintenance_cost_per_technology(conv));\n\t\t}';
+end
+
+variable_total_cost_grid_without_capital_costs = '';
+if create_variable_total_cost_grid_without_capital_costs
+    variable_total_cost_grid_without_capital_costs = '\n\t\tVariable Total_cost_grid {\n\t\t\tRange: free;\n\t\t\tDefinition: sum(conv | conv = ''Grid'', Operating_cost_grid + Maintenance_cost_per_technology(conv));\n\t\t}';
 end
 
 variables_section = strcat(variables_section,variable_input_streams,variable_exported_energy,variable_technology_installation,variable_technology_operation,...
-    variable_technology_capacity,variable_grid_capacity,variable_electricity_output,variable_heat_output,variable_cool_output,...
+    variable_technology_capacity,variable_grid_capacity,variable_electricity_output,variable_heat_output,variable_cool_output,variable_dhw_output,variable_anergy_output,...
     variable_operating_cost_per_technology,variable_maintenance_cost_per_technology,variable_capital_cost_per_technology,...
-    variable_total_cost_per_technology,variable_total_cost_per_technology_without_capital_costs,variable_total_cost_grid);
+    variable_total_cost_per_technology,variable_total_cost_per_technology_without_capital_costs,variable_total_cost_grid,variable_total_cost_grid_without_capital_costs);

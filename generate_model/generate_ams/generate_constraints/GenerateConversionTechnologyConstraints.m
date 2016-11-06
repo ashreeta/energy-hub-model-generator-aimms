@@ -13,9 +13,9 @@ if apply_constraint_energy_balance == 1
         end
     else
         if simplified_storage_representation == 0
-            constraint_energy_balance = '\n\t\tConstraint Load_balance_constraint {\n\t\t\tIndexDomain: (t,x,h,hh);\n\t\t\tDefinition: sum(conv, Input_energy(t,conv,h) * Cmatrix(x,conv)) + sum(stor, (Storage_output_energy(t,stor,h) - Storage_input_energy(t,stor,h)) * Smatrix(x,stor)) = Loads(t,x,h) + Exported_energy(t,x,h) + Interhub_exchanged_energy(t,x,h,hh);\n\t\t}';
+            constraint_energy_balance = '\n\t\tConstraint Load_balance_constraint {\n\t\t\tIndexDomain: (t,x,h);\n\t\t\tDefinition: sum(conv, Input_energy(t,conv,h) * Cmatrix(x,conv)) + sum(stor, (Storage_output_energy(t,stor,h) - Storage_input_energy(t,stor,h)) * Smatrix(x,stor)) = Loads(t,x,h) + Exported_energy(t,x,h) + sum(hh, Link_flow(t,x,hh,h) - Link_losses(t,x,hh,h) - Link_flow(t,x,h,hh));\n\t\t}';
         else
-            constraint_energy_balance = '\n\t\tConstraint Load_balance_constraint {\n\t\t\tIndexDomain: (t,x,h,hh);\n\t\t\tDefinition: sum(conv, Input_energy(t,conv,h) * Cmatrix(x,conv)) + Storage_output_energy(t,x,h) - Storage_input_energy(t,x,h) = Loads(t,x,h) + Exported_energy(t,x,h) + Interhub_exchanged_energy(t,x,h,hh);\n\t\t}';
+            constraint_energy_balance = '\n\t\tConstraint Load_balance_constraint {\n\t\t\tIndexDomain: (t,x,h);\n\t\t\tDefinition: sum(conv, Input_energy(t,conv,h) * Cmatrix(x,conv)) + Storage_output_energy(t,x,h) - Storage_input_energy(t,x,h) = Loads(t,x,h) + Exported_energy(t,x,h) + sum(hh, Link_flow(t,x,hh,h) - Link_losses(t,x,hh,h) - Link_flow(t,x,h,hh));\n\t\t}';
         end
     end
 end
@@ -92,11 +92,10 @@ end
 %dispatch constraint
 constraint_dispatch = '';
 if apply_constraint_dispatch == 1
-    dispatchable_techs_including_grid = technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_inputs,'Solar')));
     index_domain_string = '';
-    for t=1:length(dispatchable_techs_including_grid)
-        index_domain_string = strcat(index_domain_string,'''',char(dispatchable_techs_including_grid(t)),'''');
-        if t < length(dispatchable_techs_including_grid)
+    for t=1:length(technologies_excluding_grid)
+        index_domain_string = strcat(index_domain_string,'''',char(technologies_excluding_grid(t)),'''');
+        if t < length(technologies_excluding_grid)
              index_domain_string = strcat(index_domain_string,' OR conv = '); 
         end
     end
@@ -110,11 +109,10 @@ end
 %minimum part load constraint
 constraint_min_part_load = '';
 if apply_constraint_min_part_load == 1
-    dispatchable_techs_including_grid = technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_inputs,'Solar')));
     index_domain_string = '';
-    for t=1:length(dispatchable_techs_including_grid)
-        index_domain_string = strcat(index_domain_string,'''',char(dispatchable_techs_including_grid(t)),'''');
-        if t < length(dispatchable_techs_including_grid)
+    for t=1:length(technologies_excluding_grid)
+        index_domain_string = strcat(index_domain_string,'''',char(technologies_excluding_grid(t)),'''');
+        if t < length(technologies_excluding_grid)
              index_domain_string = strcat(index_domain_string,' OR conv = '); 
         end
     end
@@ -186,6 +184,16 @@ if apply_constraint_installation == 1
     end
 end
 
+%installed techs constraint
+constraint_installed_conversion_techs = '';
+if apply_constraint_installed_conversion_techs == 1
+    if multiple_hubs == 0
+        constraint_installed_conversion_techs = '\n\t\tConstraint Installed_conversion_techs_constraint {\n\t\t\tIndexDomain: (x,conv);\n\t\t\tDefinition: Installation(x,conv) = Installed_conversion_techs(conv);\n\t\t}';
+    else
+        constraint_installed_conversion_techs = '\n\t\tConstraint Installed_conversion_techs_constraint {\n\t\t\tIndexDomain: (x,conv,h);\n\t\t\tDefinition: Installation(x,conv,h) = Installed_conversion_techs(conv,h);\n\t\t}';
+    end
+end
+
 %operation constraint
 constraint_operation = '';
 if apply_constraint_operation == 1
@@ -204,23 +212,34 @@ if apply_constraint_operation == 1
     end
 end
 
+%I don't think this is necessary
 %electricity export constraint
-constraint_electricity_export = '';
-if apply_constraint_electricity_export == 1
+% constraint_electricity_export = '';
+% if apply_constraint_electricity_export == 1
+%     if multiple_hubs == 0
+%         constraint_electricity_export = '\n\t\tConstraint Electricity_export_constraint {\n\t\t\tIndexDomain: (t,x,conv) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Exported_energy(t,x) <= Big_M * (1 - Operation(t,conv));\n\t\t}';
+%     else
+%         constraint_electricity_export = '\n\t\tConstraint Electricity_export_constraint {\n\t\t\tIndexDomain: (t,x,conv,h) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Exported_energy(t,x,h) <= Big_M * (1 - Operation(t,conv,h));\n\t\t}';
+%     end
+% end
+
+%grid capacity violation constraint 1 (electricity imports)
+constraint_grid_capacity_violation1 = '';
+if apply_constraint_grid_capacity_violation1 == 1
     if multiple_hubs == 0
-        constraint_electricity_export = '\n\t\tConstraint Electricity_export_constraint {\n\t\t\tIndexDomain: (t,x,conv) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Exported_energy(t,x) <= Big_M * (1 - Operation(t,conv));\n\t\t}';
+        constraint_grid_capacity_violation1 = '\n\t\tConstraint Grid_capacity_violation_constraint_import {\n\t\t\tIndexDomain: (t,conv) | conv=''Grid'';\n\t\t\tDefinition: Input_energy(t,conv) <= Capacity_grid;\n\t\t}';
     else
-        constraint_electricity_export = '\n\t\tConstraint Electricity_export_constraint {\n\t\t\tIndexDomain: (t,x,conv,h) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Exported_energy(t,x,h) <= Big_M * (1 - Operation(t,conv,h));\n\t\t}';
+        constraint_grid_capacity_violation1 = '\n\t\tConstraint Grid_capacity_violation_constraint_import {\n\t\t\tIndexDomain: (t.conv,h) | conv=''Grid'';\n\t\t\tDefinition: sum(h,Input_energy(t,conv,h)) <= Capacity_grid;\n\t\t}';
     end
 end
 
-%grid capacity violation constraint
-constraint_grid_capacity_violation = '';
-if apply_constraint_grid_capacity_violation == 1
+%grid capacity violation constraint 2 (electricity exports)
+constraint_grid_capacity_violation2 = '';
+if apply_constraint_grid_capacity_violation2 == 1
     if multiple_hubs == 0
-        constraint_grid_capacity_violation = '\n\t\tConstraint Grid_capacity_violation_constraint {\n\t\t\tIndexDomain: (t,x,conv) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Abs(Input_energy(t,conv) - Exported_energy(t,x)) <= Capacity_grid';
+        constraint_grid_capacity_violation2 = '\n\t\tConstraint Grid_capacity_violation_constraint_export {\n\t\t\tIndexDomain: (t,x) | x=''Elec'';\n\t\t\tDefinition: Exported_energy(t,x) <= Capacity_grid;\n\t\t}';
     else
-        constraint_grid_capacity_violation = '\n\t\tConstraint Grid_capacity_violation_constraint {\n\t\t\tIndexDomain: (t,x,conv,h) | x=''Elec'' AND conv=''Grid'';\n\t\t\tDefinition: Abs(sum(h,Input_energy(t,conv,h)) - sum(h,Exported_energy(t,x,h))) <= Capacity_grid';
+        constraint_grid_capacity_violation2 = '\n\t\tConstraint Grid_capacity_violation_constraint_export {\n\t\t\tIndexDomain: (t,x,h) | x=''Elec'';\n\t\t\tDefinition: sum(h,Exported_energy(t,x,h)) <= Capacity_grid;\n\t\t}';
     end
 end
 
@@ -280,5 +299,5 @@ end
 %% COMPILE CONSTRAINTS
 
 constraints_section = strcat(constraints_section,constraint_energy_balance,constraint_capacity,constraint_min_capacity,constraint_max_capacity,constraint_dispatch,constraint_min_part_load,...
-    constraint_solar_availability,constraint_roof_area,constraint_installation,constraint_operation,constraint_electricity_export,constraint_grid_capacity_violation,...
-    constraint_htp_ratio,constraint_chp1,constraint_chp2);
+    constraint_solar_availability,constraint_roof_area,constraint_installation,constraint_installed_conversion_techs,constraint_operation,...
+    constraint_grid_capacity_violation1,constraint_grid_capacity_violation2,constraint_htp_ratio,constraint_chp1,constraint_chp2);

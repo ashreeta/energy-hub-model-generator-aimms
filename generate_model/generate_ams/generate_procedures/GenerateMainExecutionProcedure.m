@@ -6,27 +6,22 @@ execution_empty_variables = '\n\t\t\tempty AllVariables;';
 %relaxations
 %TODO: figure out why this is necessary
 relaxations_string = '';
-non_solar_heat_generating_technologies_excluding_chp = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(strcmp(technologies.conversion_techs_outputs,'Heat'))));
-non_solar_electricity_generating_technologies_excluding_chp = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(strcmp(technologies.conversion_techs_outputs,'Elec'))));
-for t=1:length(non_solar_heat_generating_technologies_excluding_chp)
-    if multiple_hubs == 0
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Heat'',''',char(non_solar_heat_generating_technologies_excluding_chp(t)),''').relax := 1;');
-    else
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Heat'',''',char(non_solar_heat_generating_technologies_excluding_chp(t)),''',h).relax := 1;');
+if select_techs_and_do_sizing == 1
+    non_solar_heat_generating_technologies_excluding_chp = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(strcmp(technologies.conversion_techs_outputs,'Heat'))));
+    non_solar_electricity_generating_technologies_excluding_chp = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(strcmp(technologies.conversion_techs_outputs,'Elec'))));
+    for t=1:length(non_solar_heat_generating_technologies_excluding_chp)
+        if multiple_hubs == 0
+            relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Heat'',''',char(non_solar_heat_generating_technologies_excluding_chp(t)),''').relax := 1;');
+        else
+            relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Heat'',''',char(non_solar_heat_generating_technologies_excluding_chp(t)),''',h).relax := 1;');
+        end
     end
-end
-for t=1:length(non_solar_electricity_generating_technologies_excluding_chp)
-    if multiple_hubs == 0
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Elec'',''',char(non_solar_electricity_generating_technologies_excluding_chp(t)),''').relax := 1;');
-    else
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Elec'',''',char(non_solar_electricity_generating_technologies_excluding_chp(t)),''',h).relax := 1;');
-    end
-end
-for t=1:length(cooling_technologies)
-    if multiple_hubs == 0
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Cool'',''',char(cooling_technologies(t)),''').relax := 1;');
-    else
-        relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Cool'',''',char(cooling_technologies(t)),''',h).relax := 1;');
+    for t=1:length(non_solar_electricity_generating_technologies_excluding_chp)
+        if multiple_hubs == 0
+            relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Elec'',''',char(non_solar_electricity_generating_technologies_excluding_chp(t)),''').relax := 1;');
+        else
+            relaxations_string = strcat(relaxations_string,'\n\t\t\tCapacity(''Elec'',''',char(non_solar_electricity_generating_technologies_excluding_chp(t)),''',h).relax := 1;');
+        end
     end
 end
 execution_relaxations = relaxations_string;

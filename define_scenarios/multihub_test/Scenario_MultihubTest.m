@@ -27,7 +27,7 @@ select_techs_and_do_sizing = 1;
 %% TIME VARIABLES
 
 timestep = 'hours';
-timesteps = 1:8760;
+timesteps = 1:24;
 number_of_timesteps = length(timesteps);
 
 %% ELECTRICITY GRID PARAMETERS

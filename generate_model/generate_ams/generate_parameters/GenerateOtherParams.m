@@ -18,21 +18,21 @@ if create_param_roof_area == 1
 end
 
 %floor area
-param_floor_area = '';
-if create_param_floor_area == 1
-    if multiple_hubs == 0
-        param_floor_area = strcat('\n\t\tParameter Building_floor_area {\n\t\t\tDefinition: ',num2str(floor_areas),';\n\t\t}');
-    else
-        definition_string = '';
-        for t=1:length(hub_list)
-            if t>1
-                definition_string = strcat(definition_string,', ');
-            end
-            definition_string = strcat(definition_string,char(num2str(hub_list(t))),':',num2str(floor_areas(t)));
-    end
-        param_floor_area = strcat('\n\t\tParameter Building_floor_area {\n\t\t\tIndexDomain: h;\n\t\t\tDefinition: data {',definition_string,'};\n\t\t}');
-    end
-end
+% param_floor_area = '';
+% if create_param_floor_area == 1
+%     if multiple_hubs == 0
+%         param_floor_area = strcat('\n\t\tParameter Building_floor_area {\n\t\t\tDefinition: ',num2str(floor_areas),';\n\t\t}');
+%     else
+%         definition_string = '';
+%         for t=1:length(hub_list)
+%             if t>1
+%                 definition_string = strcat(definition_string,', ');
+%             end
+%             definition_string = strcat(definition_string,char(num2str(hub_list(t))),':',num2str(floor_areas(t)));
+%     end
+%         param_floor_area = strcat('\n\t\tParameter Building_floor_area {\n\t\t\tIndexDomain: h;\n\t\t\tDefinition: data {',definition_string,'};\n\t\t}');
+%     end
+% end
 
 %carbon factors
 param_carbon_factors = '';
@@ -71,4 +71,4 @@ if create_param_big_M == 1
 end
 
 %compile other parameters to string
-params_section = strcat(params_section,param_roof_area,param_floor_area,param_carbon_factors,param_max_carbon,param_solar_radiation,param_big_M);
+params_section = strcat(params_section,param_roof_area,param_carbon_factors,param_max_carbon,param_solar_radiation,param_big_M);

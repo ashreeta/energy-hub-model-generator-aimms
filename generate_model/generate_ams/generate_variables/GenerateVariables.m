@@ -6,6 +6,7 @@ section_header = '\n\tDeclarationSection Variables {';
 
 GenerateConversionTechnologyVariables
 GenerateStorageTechnologyVariables
+GenerateNetworkVariables
 GenerateOtherVariables
 
 section_footer = '\n\t}';

@@ -27,11 +27,6 @@ if create_variable_total_carbon_per_timestep
     end
 end
 
-variable_interhub_exchanged_energy = '';
-if create_variable_interhub_exchanged_energy
-    variable_interhub_exchanged_energy = '\n\t\tVariable Interhub_exchanged_energy {\n\t\t\tIndexDomain: (t,x,h,hh);\n\t\t\tRange: free;\n\t\t}';
-end
-
 section_footer = '\n\t}';
 
-variables_section = strcat(variables_section,variable_energy_demands,variable_total_carbon_per_technology,variable_total_carbon_per_timestep,variable_interhub_exchanged_energy);
+variables_section = strcat(variables_section,variable_energy_demands,variable_total_carbon_per_technology,variable_total_carbon_per_timestep);

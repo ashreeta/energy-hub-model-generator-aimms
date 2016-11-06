@@ -168,10 +168,5 @@ else
 	end
 end
 
-variable_total_cost_per_storage_without_capital_costs = '';
-if create_variable_total_cost_per_storage_without_capital_costs == 1
-    variable_total_cost_per_storage_without_capital_costs = '\n\t\tVariable Total_cost_per_storage {\n\t\t\tDefinition: 0;\n\t\t}';
-end
-
 variables_section = strcat(variables_section,variable_storage_charge_rate,variable_storage_discharge_rate,variable_storage_soc,variable_storage_capacity,...
-    variable_storage_installation,variable_capital_cost_per_storage,variable_total_cost_per_storage,variable_total_cost_per_storage_without_capital_costs);
+    variable_storage_installation,variable_capital_cost_per_storage,variable_total_cost_per_storage);

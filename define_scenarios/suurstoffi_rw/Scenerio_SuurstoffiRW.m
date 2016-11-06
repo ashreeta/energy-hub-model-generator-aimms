@@ -4,11 +4,11 @@
 %% SET THE SCENARIO NAME
 
 %used for saving the results
-scenario_name = 'generic_energy_hub_basic';
+scenario_name = 'suurstoffi_rw';
 
 %% CASE TO BE ANALYZED
 
-case_study = 'generic_energy_hub';
+case_study = 'suurstoffi_rw';
 
 %% OBJECTIVE AND THE TYPE OF OPTIMIZATION
 
@@ -19,7 +19,6 @@ objective = 1;
 
 %select technologies and do sizing?
 select_techs_and_do_sizing = 1;
-include_installed_technologies = 0;
 
 %% TIME VARIABLES
 
@@ -76,4 +75,3 @@ electrical_storage_initialization_method = 1;
 heat_storage_initialization_method = 2;
 cool_storage_initialization_method = 2;
 dhw_storage_initialization_method = 2;
-anergy_storage_initialization_method = 2;

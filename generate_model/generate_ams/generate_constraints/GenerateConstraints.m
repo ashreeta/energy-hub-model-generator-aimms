@@ -6,6 +6,7 @@ header_section = '\n\tDeclarationSection Constraints {';
 GenerateConversionTechnologyConstraints
 GenerateStorageTechnologyConstraints
 GenerateStorageTechnologyInitializationConstraints
+GenerateNetworkConstraints
 GenerateOtherConstraints
 
 footer_section = '\n\t}';

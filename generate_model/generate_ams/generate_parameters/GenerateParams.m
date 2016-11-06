@@ -5,6 +5,7 @@ header_params = '\n\tDeclarationSection Parameters {';
 GenerateLoadParams
 GenerateConversionTechnologyParams
 GenerateStorageTechnologyParams
+GenerateNetworkParams
 GenerateOtherParams
 
 footer_params = '\n\t}';

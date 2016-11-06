@@ -32,6 +32,7 @@ if create_energy_carriers_set == 1
     energy_carriers_set = strcat('\n\t\tSet Energy_carriers {\n\t\t\tIndex: x;\n\t\t\tDefinition: data {',energy_carriers_string,'};\n\t\t}');
 end
 
+%generate hubs set
 hubs_set = '';
 if create_hubs_set == 1
     hubs_string=sprintf('%i,',hub_list);

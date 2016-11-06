@@ -4,11 +4,11 @@
 %% SET THE SCENARIO NAME
 
 %used for saving the results
-scenario_name = 'generic_energy_hub_basic';
+scenario_name = 'test_single_hub_no_sizing';
 
 %% CASE TO BE ANALYZED
 
-case_study = 'generic_energy_hub';
+case_study = 'testing_case_single_hub';
 
 %% OBJECTIVE AND THE TYPE OF OPTIMIZATION
 
@@ -18,13 +18,13 @@ case_study = 'generic_energy_hub';
 objective = 1;
 
 %select technologies and do sizing?
-select_techs_and_do_sizing = 1;
-include_installed_technologies = 0;
+select_techs_and_do_sizing = 0;
+include_installed_technologies = 1;
 
 %% TIME VARIABLES
 
 timestep = 'hours';
-timesteps = 1:8760;
+timesteps = 1:24;
 number_of_timesteps = length(timesteps);
 
 %% ELECTRICITY GRID PARAMETERS

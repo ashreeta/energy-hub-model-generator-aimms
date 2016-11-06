@@ -52,13 +52,23 @@ if simplified_storage_representation == 0
         end
     end
 
-    %fixed cost constraint for storage
-    constraint_fixed_cost_storage = '';
-    if apply_constraint_fixed_cost_storage == 1
+    %storage installation constraint
+    constraint_installation_storage = '';
+    if apply_constraint_installation_storage == 1
         if multiple_hubs == 0
-            constraint_fixed_cost_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: stor;\n\t\t\tDefinition: Storage_capacity(stor) <= Big_M * Installation_storage(stor);\n\t\t}';
+            constraint_installation_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: stor;\n\t\t\tDefinition: Storage_capacity(stor) <= Big_M * Installation_storage(stor);\n\t\t}';
         else
-            constraint_fixed_cost_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: (stor,h);\n\t\t\tDefinition: Storage_capacity(stor,h) <= Big_M * Installation_storage(stor,h);\n\t\t}';
+            constraint_installation_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: (stor,h);\n\t\t\tDefinition: Storage_capacity(stor,h) <= Big_M * Installation_storage(stor,h);\n\t\t}';
+        end
+    end
+
+    %installed techs constraint
+    constraint_installed_storage_techs = '';
+    if apply_constraint_installed_storage_techs == 1
+        if multiple_hubs == 0
+            constraint_installed_storage_techs = '\n\t\tConstraint Installed_storage_techs_constraint {\n\t\t\tIndexDomain: (x,stor);\n\t\t\tDefinition: Installation_storage(x,stor) = Installed_storage_techs(stor);\n\t\t}';
+        else
+            constraint_installed_storage_techs = '\n\t\tConstraint Installed_storage_techs_constraint {\n\t\t\tIndexDomain: (x,stor,h);\n\t\t\tDefinition: Installation_storage(x,stor,h) = Installed_storage_techs(stor,h);\n\t\t}';
         end
     end
     
@@ -185,13 +195,23 @@ else
         end
     end
 
-    %fixed cost constraint for storage
-    constraint_fixed_cost_storage = '';
-    if apply_constraint_fixed_cost_storage == 1
+    %installation constraint for storage
+    constraint_installation_storage = '';
+    if apply_constraint_installation_storage == 1
         if multiple_hubs == 0
-            constraint_fixed_cost_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: x;\n\t\t\tDefinition: Storage_capacity(x) <= Big_M * Installation_storage(x);\n\t\t}';
+            constraint_installation_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: x;\n\t\t\tDefinition: Storage_capacity(x) <= Big_M * Installation_storage(x);\n\t\t}';
         else
-            constraint_fixed_cost_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: (x,h);\n\t\t\tDefinition: Storage_capacity(x,h) <= Big_M * Installation_storage(x,h);\n\t\t}';
+            constraint_installation_storage = '\n\t\tConstraint Storage_installation_constraint {\n\t\t\tIndexDomain: (x,h);\n\t\t\tDefinition: Storage_capacity(x,h) <= Big_M * Installation_storage(x,h);\n\t\t}';
+        end
+    end
+
+    %installed techs constraint
+    constraint_installed_storage_techs = '';
+    if apply_constraint_installed_storage_techs == 1
+        if multiple_hubs == 0
+            constraint_installed_storage_techs = '\n\t\tConstraint Installed_storage_techs_constraint {\n\t\t\tIndexDomain: (x);\n\t\t\tDefinition: Installation_storage(x) = Installed_storage_techs(x);\n\t\t}';
+        else
+            constraint_installed_storage_techs = '\n\t\tConstraint Installed_storage_techs_constraint {\n\t\t\tIndexDomain: (x,h);\n\t\t\tDefinition: Installation_storage(x,h) = Installed_storage_techs(x,h);\n\t\t}';
         end
     end
     
@@ -272,4 +292,4 @@ else
 end
 
 constraints_section = strcat(constraints_section,constraint_energy_balance_storage,constraint_max_charging_rate_storage,constraint_max_discharging_rate_storage,constraint_capacity_storage,...
-    constraint_min_soc_storage,constraint_fixed_cost_storage,constraint_min_capacity_storage,constraint_max_capacity_storage,constraint_min_temperature_storage,constraint_max_temperature_storage,constraint_thermal_storage_balance);
+    constraint_min_soc_storage,constraint_installation_storage,constraint_installed_storage_techs,constraint_min_capacity_storage,constraint_max_capacity_storage,constraint_min_temperature_storage,constraint_max_temperature_storage,constraint_thermal_storage_balance);
