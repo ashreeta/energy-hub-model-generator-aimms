@@ -99,24 +99,19 @@ create_objectivefn_total_cost = 0;
 %determine whether to use a simplified storage representation
 % (this increases speed by representing storage technologies in terms of their energy carrier, rather than as individual technologies)
 if multiple_hubs == 0
-    if length(electricity_storage_technologies) > 1 || length(heat_storage_technologies) > 1 || length(cool_storage_technologies) > 1 || length(dhw_storage_technologies) > 1 || length(anergy_storage_technologies) > 1
+    if length(electricity_storage_technologies) > 1 || length(heat_storage_technologies) > 1 || length(cool_storage_technologies) > 1
         simplified_storage_representation = 0;
     else
         simplified_storage_representation = 1;
     end
 else
-    simplified_storage_representation = 1;
     for h=1:number_of_hubs
-        electricity_storage_techs_this_hub = installed_technologies.storage_techs_names(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'Elec')) == h)));
-        heat_storage_techs_this_hub = installed_technologies.storage_techs_names(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'Heat')) == h)));
-        cool_storage_techs_this_hub = installed_technologies.storage_techs_names(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'Cool')) == h)));
-        dhw_storage_techs_this_hub = installed_technologies.storage_techs_names(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'DHW')) == h)));
-        anergy_storage_techs_this_hub = installed_technologies.storage_techs_names(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'Anergy')) == h)));
-        
-        if length(electricity_storage_techs_this_hub) > 1 || length(heat_storage_techs_this_hub) > 1 || length(cool_storage_techs_this_hub) > 1 || length(dhw_storage_techs_this_hub) > 1 || length(anergy_storage_techs_this_hub) > 1
-            simplified_storage_representation = 0;
-        end
-    end
+        electrical_storage_techs_this_hub = installed_technologies.storage_techs_names(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.storage_techs_types,'Elec')) == h;
+        heat_storage_techs_this_hub =
+        cool_storage_techs_this_hub =
+        dhw_storage_techs_this_hub =
+        anergy_storage_techs_this_hub =
+        if length(find(installed_technologies.storage_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'Elec')) == h))) > 1
 end
 
 %% SELECT SETS

@@ -77,7 +77,7 @@ if isempty(technologies.conversion_techs_names) == 0
     end
 
     %to be created if there are pre-installed conversion techs && you're doing sizing & tech selection
-    if isempty(installed_technologies.conversion_techs_names) == 0 && select_techs_and_do_sizing == 1
+    if include_installed_technologies == 1 && isempty(installed_technologies.conversion_techs_names) == 0 && select_techs_and_do_sizing == 1
         apply_constraint_installed_conversion_techs = 1;
     end
     
@@ -123,7 +123,7 @@ if isempty(technologies.storage_techs_names) == 0
     end
 
     %to be created if there are pre-installed storage techs and you're doing selection and sizing
-    if isempty(installed_technologies.storage_techs_names) == 0 && select_techs_and_do_sizing == 1
+    if include_installed_technologies == 1 && isempty(installed_technologies.storage_techs_names) == 0 && select_techs_and_do_sizing == 1
         apply_constraint_installed_storage_techs = 1;
     end
     

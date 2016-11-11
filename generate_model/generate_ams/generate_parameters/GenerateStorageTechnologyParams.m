@@ -231,7 +231,7 @@ if simplified_storage_representation == 0
         definition_string = '';
         if multiple_hubs == 0
 
-            index_domain_string = '(x,stor)';
+            index_domain_string = '(stor)';
             i = 0;
             for t=1:length(electricity_storage_technologies)
                 if i > 0
@@ -271,7 +271,7 @@ if simplified_storage_representation == 0
 
         else
 
-            index_domain_string = '(x,stor,h)';
+            index_domain_string = '(stor,h)';
             i = 0;
             for t=1:length(electricity_storage_technologies)
                 if i > 0
