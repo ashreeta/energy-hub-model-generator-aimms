@@ -8,23 +8,21 @@ The EHM Generator is currently only in Beta release, as we continue to resolve r
 
 #How to use the EHM Generator
 
-##Software requirements
+##1. Configure your system
 
-The EHM Generator requires MATLAB, and has been tested on MATLAB R2013b.  
+Software requirements:
 
-Running the energy hub model created by the EHM generator requires Aimms.  Aimms is available for free for academic use.
+1. The EHM Generator requires MATLAB, and has been tested on MATLAB R2013b.  
+2. Running the energy hub model created by the EHM generator requires Aimms.  Aimms is available for free for academic use.
+3. The EHM Generator has been tested on a Windows OS, but should also function with minimal changes on other systems as well.
 
-The EHM Generator has been tested on a Windows OS, but should also function with minimal changes on other systems as well.
+Download the EHM Generator from https://github.com/hues-platform/energy-hub-model-generator-aimms (click the "Clone or download" button). Place the downloaded files in a convenient location in your system
 
-##Configuring your system
+##2. Define a case study
 
-Download the EHM Generator from https://github.com/hues-platform/energy-hub-model-generator-aimms (click the "Clone or download" button)
+A *case study* refers to the building or district to be analyzed. In order to generate an energy hub model for a given case study, the data describing the case study must be provided in a specific format. 
 
-Place the downloaded files in a convenient location in your system
-
-##Defining a case study
-
-The case study refers to the building or district to be analyzed. In order to generate an energy hub model for a given case study, the data describing the case study must be provided in a specific format. To create a new case study, add a new directory to the "case_study_data" folder, and name the directory according to the desired name of your case study.  In this folder, you must create a set of appropriately named and formatted CSV files, including:
+To create a new case study, add a new directory to the "case_study_data" folder in the project's root directory, and name the directory according to the desired name of your case study.  In this folder, you must then create a set of appropriately named and formatted CSV files, including:
 
 1. a file titled "demand_data.csv" containing energy demand time series for the case.
 2. a file titled "energy_inputs_data.csv" containing energy inputs time series for the case (e.g. solar radiation)
@@ -37,23 +35,35 @@ In addition to these two files, a several additional files may be optionally cre
 6. a file titled "installed_network_technologies.csv" containing a description of network technologies already installed at the site.
 7. a file titled "network_data.csv" containing a description of the network structure.
 
-Each of these files must be formatted in a specific way, with specific properties defined on each row.  For an example of how to structure and format these files, see the "testing_case_single_hub" and "testing_case_multihub" folders in the "case_study_data" directory.
+Each of these files must be formatted in a specific way, with specific properties defined on each row.  
 
-##Defining the technologies to assess
+For an example of how to structure and format the case study files, see the "testing_case_single_hub" and "testing_case_multihub" folders in the "case_study_data" directory.
 
-If you would like to generate a model for optimizing the selection and sizing of energy conversion and storage technologies for a given case, you must define the properties of the technologies you would like to be considered. These should be defined in the "technology_data" directory.  Descriptions of energy conversion and storage technologies should be defined in a "conversion_technology_data.csv" file and a "storage_technology_data.csv"file, which should be placed within this directory. These files must be formatted in a specific way, with specific properties defined on each row.  For an example of how to structure and format these files, see the default "conversion_technology_data.csv" and "storage_technology_data.csv" files in this folder.
+*TODO: Explicitly specify the required formats for these files on a separate page.*
+
+##3. Define the technologies to be included in the analysis
+
+If you would like to optimize the selection and sizing of *energy conversion and storage technologies* for a given case, you must define the properties of the technologies to be considered. These should be defined in the "technology_data" directory in the root directory of the project.  
+
+Descriptions of energy conversion and storage technologies should be defined in a "conversion_technology_data.csv" file and a "storage_technology_data.csv"file, respectively, which should be placed within this directory. These files must be formatted in a specific way, with specific properties defined on each row.  For an example of how to structure and format these files, see the default "conversion_technology_data.csv" and "storage_technology_data.csv" files in this folder. Note: In the current version of the EHM Generator, it is not possible to generate models for optimizing the network technologies or topolocy.
+
+*TODO: Explicitly specify the required formats for these files on a separate page.*
 
 If you would like to generate a model for only operational optimization of a given case, it is unnecessary to define these files.
 
-##Defining a scenario to optimize
+##4. Create a scenario file
 
-A scenario defines the case study to be analyzed and defines the parameters for a specific experiment to be carried out on the case study.  Each scenario is defined in the form of a Matlab m-file. Examples of scenario files can be found in the "scenarios" directory.  To create a new scenario, create a new directory in the "scenarios" folder, and place the m-file defining the scenario parameters within this directory.  The directory may also contain any additional scenario-specific files not included in the "case_study_data" or "technology_data" directories.
+The *scenario file* indicates the case study to be analyzed and defines the parameters for a specific experiment to be carried out on that case study.  A scenario file takes the form of a Matlab m-file. Examples of scenario files can be found in the "scenarios" directory in the root directory of the project.  
 
-##Running the EHM generator
+To add a new scenario, create a new directory in the "scenarios" folder (give the directory any name you wish), and place the m-file defining the scenario parameters within this directory.  The directory may also contain any additional scenario-specific files not included in the "case_study_data" or "technology_data" directories.
 
-Once you have defined the case study and technologies, and created a scenario file, you're ready to run the EHM Generator.  To set up a run, open the "Main.m" script, set the correct path and change the scenario name as appropriate.  Then simply run the Main.m script.  The script will run for ~30 seconds, then output a file called energy_hub.ams, located in "aimms_model\energy_hub\MainProject". The EHM Generator will also output a set of input files for Aimms, based on the case study data provided.  These files will be located in "aimms_model\energy_hub", and will automatically be loaded and run by Aimms. 
+##5. Run the EHM generator
 
-##Running your energy hub model
+Once you have defined the case study and technologies, and created a scenario file, you're ready to run the EHM Generator.  To set up a run, (1) open the "Main.m" script in the root directory of the project, (2) set the correct system path to the root directory of the project and (3) change the scenario name as appropriate.  Then simply run the Main.m script.  
+
+The script will run for ~30 seconds, then output a file called "energy_hub.ams", located in "aimms_model\energy_hub\MainProject". The EHM Generator will also output a set of input files for Aimms, based on the case study data provided.  These files will be located in "aimms_model\energy_hub", and will automatically be loaded and run by Aimms when the energy hub model is executed. 
+
+#Running your energy hub model
 There are two ways to run your energy hub model, manually and automatically:
 
 1. To run the model manually, go to "aimms_model\energy_hub" and open the file "energy_hub.aimms".  This will open an Aimms session. To run the model, right-click the procedure "Main_execution" in the top pane on the left hand side of the Aimms window and select "Run procedure".  The model will execute and the results will be printed to a set of XLSX files in the directory "aimms_model\energy_hub\results".
