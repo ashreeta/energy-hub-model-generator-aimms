@@ -72,7 +72,7 @@ The script will run for ~30 seconds, then output a file called "energy_hub.ams",
 There are two ways to run your energy hub model, manually and automatically:
 
 1. To run the model manually, go to "aimms_model\energy_hub" and open the file "energy_hub.aimms".  This will open an Aimms session. To run the model, right-click the procedure "Main_execution" in the top pane on the left hand side of the Aimms window and select "Run procedure".  The model will execute and the results will be printed to a set of XLSX files in the directory "aimms_model\energy_hub\results".
-2. To run the model automatically, change the value of the variable "execute_energy_hub_model" to 1 in Main.m, and run Main.m.  If you've already generated the model, you can simply run the Execute AIMMS Model cell in Main.m.
+2. To run the model automatically, change the value of the variable "execute_energy_hub_model" to 1 in Main.m, and run Main.m.  If you've already generated the model, you can simply run the "Execute AIMMS Model" cell in Main.m.
 
 #Visualizing the results
 
