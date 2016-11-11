@@ -1,10 +1,15 @@
 #What is the EHM Generator?
 
-The Energy Hub Model (EHM) Generator is a set of Matlab scripts for automating the creation of an energy hub model for a specific case study (building or district) and a specific set of technologies to consider for installation/sizing (energy conversion, storage and network technologies).  The EHM Generator takes as input case study data and technology data in defined formats (described below) and outputs an AMS file which can be executed in the optimization package Aimms.  The EHM Generator also includes optional code for executing the energy hub model and visualizing the results.
+The *Energy Hub Model (EHM) Generator* is a set of Matlab scripts for automating the creation of an energy hub model for a given case study and a given set of technologies.  
 
-The purpose of the EHM Generator is (1) to simplify and accellerate the process of developing energy hub models by automated code generation, and (2) to facilitate the incorporation of energy hub models into multi-model workflows, e.g. together with other modules in the HUES platform.
+The EHM Generator takes as input case study data and technology data in defined formats and outputs an AMS file which can be executed in the optimization package Aimms.  The EHM Generator also includes optional code for executing the energy hub model and visualizing the results.
 
-The EHM Generator is currently only in Beta release, as we continue to resolve remaining issues.
+The purpose of the EHM Generator is:
+
+1. To simplify and accellerate the process of developing energy hub models by automated code generation
+2. To facilitate the incorporation of energy hub models into multi-model workflows, e.g. together with other modules in the HUES platform.
+
+*Note: The EHM Generator is currently only in Beta release, as we continue to resolve remaining issues*
 
 #How to use the EHM Generator
 
