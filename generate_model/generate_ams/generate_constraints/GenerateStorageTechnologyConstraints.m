@@ -238,7 +238,7 @@ else
     %min temperature constraint for thermal storage
     constraint_min_temperature_storage = '';
     if apply_constraint_min_temperature_storage == 1
-        storage_types_with_temperature_constraints = technologies.storage_techs_types(find(~isnan(technologies.storage_techs_min_temperature)));
+        storage_types_with_temperature_constraints = unique_technologies.storage_techs_types(find(~isnan(unique_technologies.storage_techs_min_temperature)));
         index_domain_string = '';
         for t=1:length(storage_types_with_temperature_constraints)
             index_domain_string = strcat(index_domain_string,'''',char(storage_types_with_temperature_constraints(t)),'''');
@@ -256,7 +256,7 @@ else
     %max temperature constraint for thermal storage
     constraint_max_temperature_storage = '';
     if apply_constraint_max_temperature_storage == 1
-        storage_types_with_temperature_constraints = technologies.storage_techs_types(find(~isnan(technologies.storage_techs_min_temperature)));
+        storage_types_with_temperature_constraints = unique_technologies.storage_techs_types(find(~isnan(unique_technologies.storage_techs_min_temperature)));
         index_domain_string = '';
         for t=1:length(storage_types_with_temperature_constraints)
             index_domain_string = strcat(index_domain_string,'''',char(storage_types_with_temperature_constraints(t)),'''');
@@ -274,7 +274,7 @@ else
     %thermal storage heat balance constraint
     constraint_thermal_storage_balance = '';
     if apply_constraint_thermal_storage_balance == 1
-        storage_types_with_temperature_constraints = technologies.storage_techs_types(find(~isnan(technologies.storage_techs_min_temperature)));
+        storage_types_with_temperature_constraints = unique_technologies.storage_techs_types(find(~isnan(unique_technologies.storage_techs_min_temperature)));
         index_domain_string = '';
         for t=1:length(storage_types_with_temperature_constraints)
             index_domain_string = strcat(index_domain_string,'''',char(storage_types_with_temperature_constraints(t)),'''');

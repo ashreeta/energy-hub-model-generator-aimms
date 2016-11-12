@@ -398,7 +398,7 @@ else
     %thermal storage temperature initialization constraint
     constraint_thermal_storage_temperature_intialization = '';
     if apply_constraint_thermal_storage_temperature_intialization == 1
-        storage_types_with_temperature_constraints = technologies.storage_techs_types(find(~isnan(technologies.storage_techs_min_temperature)));
+        storage_types_with_temperature_constraints = unique_technologies.storage_techs_types(find(~isnan(unique_technologies.storage_techs_min_temperature)));
         index_domain_string = '';
         for t=1:length(storage_types_with_temperature_constraints)
             index_domain_string = strcat(index_domain_string,'''',char(storage_types_with_temperature_constraints(t)),'''');

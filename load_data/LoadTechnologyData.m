@@ -226,41 +226,77 @@ if include_installed_technologies == 1
     end
 end
 
+%% CREATE TECHNOLOGY LISTS WHICH ONLY INCLUDE UNIQUE TECHNOLOGIES
+%this is necessary because, when multiple hubs are present, it's useful to be able to get a list of technologies that doesn't repeat any single technology more than once.
+
+[C,ia,ic] = unique(technologies.conversion_techs_names);
+unique_conversion_techs_indices = ia;
+unique_technologies.conversion_techs_names = technologies.conversion_techs_names(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_outputs = technologies.conversion_techs_outputs(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_inputs = technologies.conversion_techs_inputs(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_lifetime = technologies.conversion_techs_lifetime(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_capital_cost_variable = technologies.conversion_techs_capital_cost_variable(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_capital_cost_fixed = technologies.conversion_techs_capital_cost_fixed(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_OM_cost_variable = technologies.conversion_techs_OM_cost_variable(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_OM_cost_fixed = technologies.conversion_techs_OM_cost_fixed(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_efficiency = technologies.conversion_techs_efficiency(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_min_part_load = technologies.conversion_techs_min_part_load(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_HTP_ratio = technologies.conversion_techs_HTP_ratio(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_min_capacity = technologies.conversion_techs_min_capacity(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_max_capacity = technologies.conversion_techs_max_capacity(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_operating_costs = technologies.conversion_techs_operating_costs(unique_conversion_techs_indices);
+unique_technologies.conversion_techs_carbon_factors = technologies.conversion_techs_operating_costs(unique_conversion_techs_indices);
+
+[C,ia,ic] = unique(technologies.storage_techs_names);
+unique_storage_techs_indices = ia;
+unique_technologies.storage_techs_names = technologies.storage_techs_names(unique_storage_techs_indices);
+unique_technologies.storage_techs_types = technologies.storage_techs_types(unique_storage_techs_indices);
+unique_technologies.storage_techs_lifetime = technologies.storage_techs_lifetime(unique_storage_techs_indices);
+unique_technologies.storage_techs_capital_cost_variable = technologies.storage_techs_capital_cost_variable(unique_storage_techs_indices);
+unique_technologies.storage_techs_capital_cost_fixed = technologies.storage_techs_capital_cost_fixed(unique_storage_techs_indices);
+unique_technologies.storage_techs_charging_efficiency = technologies.storage_techs_charging_efficiency(unique_storage_techs_indices);
+unique_technologies.storage_techs_discharging_efficiency = technologies.storage_techs_discharging_efficiency(unique_storage_techs_indices);
+unique_technologies.storage_techs_decay = technologies.storage_techs_decay(unique_storage_techs_indices);
+unique_technologies.storage_techs_max_charging_rate = technologies.storage_techs_max_charging_rate(unique_storage_techs_indices);
+unique_technologies.storage_techs_max_discharging_rate = technologies.storage_techs_max_discharging_rate(unique_storage_techs_indices);
+unique_technologies.storage_techs_min_state_of_charge = technologies.storage_techs_min_state_of_charge(unique_storage_techs_indices);
+unique_technologies.storage_techs_min_capacity = technologies.storage_techs_min_capacity(unique_storage_techs_indices);
+unique_technologies.storage_techs_max_capacity = technologies.storage_techs_max_capacity(unique_storage_techs_indices);
+
 %% SET SOME VARIABLE VALUES FOR LATER USE
 
 %get a list of the energy outputs
-energy_outputs = technologies.conversion_techs_outputs;
+energy_outputs = unique_technologies.conversion_techs_outputs;
 energy_outputs(find(strcmp(energy_outputs,'CHP'))) = []; %remove CHP
-if sum(strcmp(technologies.conversion_techs_outputs,'CHP')) > 0
+if sum(strcmp(unique_technologies.conversion_techs_outputs,'CHP')) > 0
     energy_outputs = horzcat(energy_outputs,{'Heat','Elec'}); %add the outputs of CHP
 end
 energy_outputs = unique(energy_outputs);
 
 %get lists of different groupings of conversion technologies
-energy_conversion_technologies = technologies.conversion_techs_names;
-energy_storage_technologies = technologies.storage_techs_names;
-solar_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_inputs,'Solar')));
-technologies_excluding_grid = technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_names,'Grid')));
-dispatchable_technologies = intersect(technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_names,'Grid'))),...
-    technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_inputs,'Solar'))));
-chp_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_outputs,'CHP')));
-electricity_generating_technologies = technologies.conversion_techs_names(find(ismember(technologies.conversion_techs_outputs,{'Elec','CHP'})));
-heat_generating_technologies = technologies.conversion_techs_names(find(ismember(technologies.conversion_techs_outputs,{'Heat','CHP'})));
-heat_generating_technologies_excluding_chp = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_outputs,'Heat')));
-cooling_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_outputs,'Cool')));
-dhw_generating_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_outputs,'DHW')));
-anergy_generating_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_outputs,'Anergy')));
-electricity_consuming_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_inputs,'Elec')));
-heat_consuming_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_inputs,'Heat')));
-anergy_consuming_technologies = technologies.conversion_techs_names(find(strcmp(technologies.conversion_techs_inputs,'Anergy')));
-electricity_storage_technologies = technologies.storage_techs_names(find(strcmp(technologies.storage_techs_types,'Elec')));
-heat_storage_technologies = technologies.storage_techs_names(find(strcmp(technologies.storage_techs_types,'Heat')));
-cool_storage_technologies = technologies.storage_techs_names(find(strcmp(technologies.storage_techs_types,'Cool')));
-dhw_storage_technologies = technologies.storage_techs_names(find(strcmp(technologies.storage_techs_types,'DHW')));
-anergy_storage_technologies = technologies.storage_techs_names(find(strcmp(technologies.storage_techs_types,'Anergy')));
+energy_conversion_technologies = unique_technologies.conversion_techs_names;
+energy_storage_technologies = unique_technologies.storage_techs_names;
+solar_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_inputs,'Solar')));
+technologies_excluding_grid = unique_technologies.conversion_techs_names(find(~strcmp(unique_technologies.conversion_techs_names,'Grid')));
+dispatchable_technologies = intersect(unique_technologies.conversion_techs_names(find(~strcmp(unique_technologies.conversion_techs_names,'Grid'))),...
+    unique_technologies.conversion_techs_names(find(~strcmp(unique_technologies.conversion_techs_inputs,'Solar'))));
+chp_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_outputs,'CHP')));
+electricity_generating_technologies = unique_technologies.conversion_techs_names(find(ismember(unique_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+heat_generating_technologies = unique_technologies.conversion_techs_names(find(ismember(unique_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+heat_generating_technologies_excluding_chp = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_outputs,'Heat')));
+cooling_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_outputs,'Cool')));
+dhw_generating_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_outputs,'DHW')));
+anergy_generating_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_outputs,'Anergy')));
+electricity_consuming_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_inputs,'Elec')));
+heat_consuming_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_inputs,'Heat')));
+anergy_consuming_technologies = unique_technologies.conversion_techs_names(find(strcmp(unique_technologies.conversion_techs_inputs,'Anergy')));
+electricity_storage_technologies = unique_technologies.storage_techs_names(find(strcmp(unique_technologies.storage_techs_types,'Elec')));
+heat_storage_technologies = unique_technologies.storage_techs_names(find(strcmp(unique_technologies.storage_techs_types,'Heat')));
+cool_storage_technologies = unique_technologies.storage_techs_names(find(strcmp(unique_technologies.storage_techs_types,'Cool')));
+dhw_storage_technologies = unique_technologies.storage_techs_names(find(strcmp(unique_technologies.storage_techs_types,'DHW')));
+anergy_storage_technologies = unique_technologies.storage_techs_names(find(strcmp(unique_technologies.storage_techs_types,'Anergy')));
 if exist('technologies.storage_techs_min_temperature','var')
-    storages_with_temperature_constraints = technologies.storage_techs_names(find(~isnan(technologies.storage_techs_min_temperature)));
+    storages_with_temperature_constraints = unique_technologies.storage_techs_names(find(~isnan(unique_technologies.storage_techs_min_temperature)));
 else
     storages_with_temperature_constraints = [];
 end
-

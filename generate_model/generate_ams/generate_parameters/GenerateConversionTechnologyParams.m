@@ -4,8 +4,8 @@
 param_operating_costs = '';
 if create_param_operating_costs == 1
     definition_string = '';
-    technologies_excluding_grid = technologies.conversion_techs_names(find(~strcmp(technologies.conversion_techs_names,'Grid')));
-    operating_costs_excluding_grid = technologies.conversion_techs_operating_costs(find(~strcmp(technologies.conversion_techs_names,'Grid')));
+    technologies_excluding_grid = unique_technologies.conversion_techs_names(find(~strcmp(unique_technologies.conversion_techs_names,'Grid')));
+    operating_costs_excluding_grid = unique_technologies.conversion_techs_operating_costs(find(~strcmp(unique_technologies.conversion_techs_names,'Grid')));
     for t=1:length(technologies_excluding_grid)
         if t>1
             definition_string = strcat(definition_string,', ');
@@ -33,18 +33,18 @@ if create_param_OMV_costs == 1
         if t>1
             definition_string = strcat(definition_string,', ');
         end
-        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(technologies.conversion_techs_OM_cost_variable(t)));
+        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(unique_technologies.conversion_techs_OM_cost_variable(t)));
     end
     param_OMV_costs = strcat('\n\t\tParameter OMV_costs {\n\t\t\tIndexDomain: conv;\n\t\t\tDefinition: data { ',definition_string,' };\n\t\t}');
 end
 
 %linear capital costs
 param_linear_capital_costs = '';
-electricity_technology_linear_capital_costs = technologies.conversion_techs_capital_cost_variable(find(ismember(technologies.conversion_techs_outputs,{'Elec','CHP'})));
-heat_technology_linear_capital_costs = technologies.conversion_techs_capital_cost_variable(find(strcmp(technologies.conversion_techs_outputs,'Heat'))); %don't include chp here
-cooling_technology_linear_capital_costs = technologies.conversion_techs_capital_cost_variable(find(strcmp(technologies.conversion_techs_outputs,'Cool')));
-dhw_technology_linear_capital_costs = technologies.conversion_techs_capital_cost_variable(find(strcmp(technologies.conversion_techs_outputs,'DHW')));
-anergy_technology_linear_capital_costs = technologies.conversion_techs_capital_cost_variable(find(strcmp(technologies.conversion_techs_outputs,'Anergy')));
+electricity_technology_linear_capital_costs = unique_technologies.conversion_techs_capital_cost_variable(find(ismember(unique_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+heat_technology_linear_capital_costs = unique_technologies.conversion_techs_capital_cost_variable(find(strcmp(unique_technologies.conversion_techs_outputs,'Heat'))); %don't include chp here
+cooling_technology_linear_capital_costs = unique_technologies.conversion_techs_capital_cost_variable(find(strcmp(unique_technologies.conversion_techs_outputs,'Cool')));
+dhw_technology_linear_capital_costs = unique_technologies.conversion_techs_capital_cost_variable(find(strcmp(unique_technologies.conversion_techs_outputs,'DHW')));
+anergy_technology_linear_capital_costs = unique_technologies.conversion_techs_capital_cost_variable(find(strcmp(unique_technologies.conversion_techs_outputs,'Anergy')));
 if create_param_linear_capital_costs == 1
     linear_capital_costs = '\n\t\tParameter Linear_capital_costs {\n\t\t\tIndexDomain: (x,conv) | Cmatrix(x,conv) > 0;\n\t\t\tDefinition: {\n\t\t\tdata { ';
     definition_string = '';
@@ -71,11 +71,11 @@ end
 
 %fixed capital costs
 param_fixed_capital_costs = '';
-electricity_technology_fixed_capital_costs = technologies.conversion_techs_capital_cost_fixed(find(ismember(technologies.conversion_techs_outputs,{'Elec','CHP'})));
-heat_technology_fixed_capital_costs = technologies.conversion_techs_capital_cost_fixed(find(strcmp(technologies.conversion_techs_outputs,'Heat'))); %don't include chp here
-cooling_technology_fixed_capital_costs = technologies.conversion_techs_capital_cost_fixed(find(strcmp(technologies.conversion_techs_outputs,'Cool')));
-dhw_technology_fixed_capital_costs = technologies.conversion_techs_capital_cost_fixed(find(strcmp(technologies.conversion_techs_outputs,'DHW')));
-anergy_technology_fixed_capital_costs = technologies.conversion_techs_capital_cost_fixed(find(strcmp(technologies.conversion_techs_outputs,'Anergy')));
+electricity_technology_fixed_capital_costs = unique_technologies.conversion_techs_capital_cost_fixed(find(ismember(unique_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+heat_technology_fixed_capital_costs = unique_technologies.conversion_techs_capital_cost_fixed(find(strcmp(unique_technologies.conversion_techs_outputs,'Heat'))); %don't include chp here
+cooling_technology_fixed_capital_costs = unique_technologies.conversion_techs_capital_cost_fixed(find(strcmp(unique_technologies.conversion_techs_outputs,'Cool')));
+dhw_technology_fixed_capital_costs = unique_technologies.conversion_techs_capital_cost_fixed(find(strcmp(unique_technologies.conversion_techs_outputs,'DHW')));
+anergy_technology_fixed_capital_costs = unique_technologies.conversion_techs_capital_cost_fixed(find(strcmp(unique_technologies.conversion_techs_outputs,'Anergy')));
 if create_param_fixed_capital_costs == 1
     fixed_capital_costs = '\n\t\tParameter Fixed_capital_costs {\n\t\t\tIndexDomain: (x,conv) | Cmatrix(x,conv) > 0;\n\t\t\tDefinition: {\n\t\t\tdata { ';
     definition_string = '';
@@ -121,7 +121,7 @@ if create_param_lifetimes == 1
         if t>1
             definition_string = strcat(definition_string,', ');
         end
-        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(technologies.conversion_techs_lifetime(t)));
+        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(unique_technologies.conversion_techs_lifetime(t)));
     end
     param_lifetimes = strcat('\n\t\tParameter Lifetime {\n\t\t\tIndexDomain: conv | conv <> "Grid";\n\t\t\tDefinition: data { ',definition_string,' };\n\t\t}');
 end
@@ -137,11 +137,11 @@ end
 
 %C matrix
 param_C_matrix = '';
-electricity_generating_technology_efficiencies = technologies.conversion_techs_efficiency(find(ismember(technologies.conversion_techs_outputs,{'Elec','CHP'})));
-heat_generating_technology_efficiencies = technologies.conversion_techs_efficiency(find(ismember(technologies.conversion_techs_outputs,{'Heat','CHP'})));
-cooling_technology_efficiencies = technologies.conversion_techs_efficiency(find(strcmp(technologies.conversion_techs_outputs,'Cool')));
-dhw_generating_technology_efficiencies = technologies.conversion_techs_efficiency(find(strcmp(technologies.conversion_techs_outputs,'DHW')));
-anergy_generating_technology_efficiencies = technologies.conversion_techs_efficiency(find(strcmp(technologies.conversion_techs_outputs,'Anergy')));
+electricity_generating_technology_efficiencies = unique_technologies.conversion_techs_efficiency(find(ismember(unique_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+heat_generating_technology_efficiencies = unique_technologies.conversion_techs_efficiency(find(ismember(unique_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+cooling_technology_efficiencies = unique_technologies.conversion_techs_efficiency(find(strcmp(unique_technologies.conversion_techs_outputs,'Cool')));
+dhw_generating_technology_efficiencies = unique_technologies.conversion_techs_efficiency(find(strcmp(unique_technologies.conversion_techs_outputs,'DHW')));
+anergy_generating_technology_efficiencies = unique_technologies.conversion_techs_efficiency(find(strcmp(unique_technologies.conversion_techs_outputs,'Anergy')));
 if create_param_C_matrix == 1
     C_matrix = '\n\t\tParameter Cmatrix {\n\t\t\tIndexDomain: (x,conv);\n\t\t\tDefinition: { data { ';
     definition_string = '';
@@ -180,23 +180,23 @@ end
 param_capacity = '';
 if create_param_capacity == 1
     number_of_installed_conversion_techs = length(installed_technologies.conversion_techs_names);
-    electricity_generating_technologies = installed_technologies.conversion_techs_names(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
-    heat_generating_technologies = installed_technologies.conversion_techs_names(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
-    cooling_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
-    dhw_generating_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
-    anergy_generating_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
+    installed_electricity_generating_technologies = installed_technologies.conversion_techs_names(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+    installed_heat_generating_technologies = installed_technologies.conversion_techs_names(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+    installed_cooling_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
+    installed_dhw_generating_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
+    installed_anergy_generating_technologies = installed_technologies.conversion_techs_names(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
     
-    electricity_technology_capacity = installed_technologies.conversion_techs_capacity(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
-    heat_technology_capacity = installed_technologies.conversion_techs_capacity(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
-    cooling_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
-    dhw_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
-    anergy_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
+    installed_electricity_technology_capacity = installed_technologies.conversion_techs_capacity(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+    installed_heat_technology_capacity = installed_technologies.conversion_techs_capacity(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+    installed_cooling_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
+    installed_dhw_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
+    installed_anergy_technology_capacity = installed_technologies.conversion_techs_capacity(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
 
-    electricity_technology_node = installed_technologies.conversion_techs_node(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
-    heat_technology_node = installed_technologies.conversion_techs_node(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
-    cooling_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
-    dhw_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
-    anergy_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
+    installed_electricity_technology_node = installed_technologies.conversion_techs_node(find(ismember(installed_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+    installed_heat_technology_node = installed_technologies.conversion_techs_node(find(ismember(installed_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+    installed_cooling_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'Cool')));
+    installed_dhw_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'DHW')));
+    installed_anergy_technology_node = installed_technologies.conversion_techs_node(find(strcmp(installed_technologies.conversion_techs_outputs,'Anergy')));
     
     definition_string = '';
     index_domain_string = '';
@@ -204,39 +204,39 @@ if create_param_capacity == 1
 
         index_domain_string = '(x,conv)';
         i = 0;
-        for t=1:length(electricity_generating_technologies)
+        for t=1:length(installed_electricity_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Elec,',char(electricity_generating_technologies(t)),'):',num2str(electricity_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Elec,',char(installed_electricity_generating_technologies(t)),'):',num2str(installed_electricity_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(heat_generating_technologies)
+        for t=1:length(installed_heat_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Heat,',char(heat_generating_technologies(t)),'):',num2str(heat_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Heat,',char(installed_heat_generating_technologies(t)),'):',num2str(installed_heat_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(cooling_technologies)
+        for t=1:length(installed_cooling_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Cool,',char(cooling_technologies(t)),'):',num2str(cooling_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Cool,',char(installed_cooling_technologies(t)),'):',num2str(installed_cooling_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(dhw_generating_technologies)
+        for t=1:length(installed_dhw_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(DHW,',char(dhw_generating_technologies(t)),'):',num2str(dhw_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(DHW,',char(installed_dhw_generating_technologies(t)),'):',num2str(installed_dhw_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(anergy_generating_technologies)
+        for t=1:length(installed_anergy_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Anergy,',char(anergy_generating_technologies(t)),'):',num2str(anergy_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Anergy,',char(installed_anergy_generating_technologies(t)),'):',num2str(installed_anergy_technology_capacity(t)));
             i = 1 + 1;
         end
 
@@ -244,40 +244,40 @@ if create_param_capacity == 1
 
         index_domain_string = '(x,conv,h)';
         i = 0;
-        for t=1:length(electricity_generating_technologies)
+        for t=1:length(installed_electricity_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Elec,',char(electricity_generating_technologies(t)),',',num2str(electricity_technology_node(t)),'):',num2str(electricity_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Elec,',char(installed_electricity_generating_technologies(t)),',',num2str(installed_electricity_technology_node(t)),'):',num2str(installed_electricity_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(heat_generating_technologies)
+        for t=1:length(installed_heat_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Heat,',char(heat_generating_technologies(t)),',',num2str(heat_technology_node(t)),'):',num2str(heat_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Heat,',char(installed_heat_generating_technologies(t)),',',num2str(installed_heat_technology_node(t)),'):',num2str(installed_heat_technology_capacity(t)));
 
             i = 1 + 1;
         end
-        for t=1:length(cooling_technologies)
+        for t=1:length(installed_cooling_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Cool,',char(cooling_technologies(t)),',',num2str(cooling_technology_node(t)),'):',num2str(cooling_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Cool,',char(installed_cooling_technologies(t)),',',num2str(installed_cooling_technology_node(t)),'):',num2str(installed_cooling_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(dhw_generating_technologies)
+        for t=1:length(installed_dhw_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(DHW,',char(dhw_generating_technologies(t)),',',num2str(dhw_technology_node(t)),'):',num2str(dhw_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(DHW,',char(installed_dhw_generating_technologies(t)),',',num2str(installed_dhw_technology_node(t)),'):',num2str(installed_dhw_technology_capacity(t)));
             i = 1 + 1;
         end
-        for t=1:length(anergy_generating_technologies)
+        for t=1:length(installed_anergy_generating_technologies)
             if i > 0
                 definition_string = strcat(definition_string,', ');
             end
-            definition_string = strcat(definition_string,'(Anergy,',char(anergy_generating_technologies(t)),',',num2str(anergy_technology_node(t)),'):',num2str(anergy_technology_capacity(t)));
+            definition_string = strcat(definition_string,'(Anergy,',char(installed_anergy_generating_technologies(t)),',',num2str(installed_anergy_technology_node(t)),'):',num2str(installed_anergy_technology_capacity(t)));
             i = 1 + 1;
         end
 
@@ -291,19 +291,14 @@ end
 %only used if we're not doing grid sizing; otherwise this is set by the capacity variable
 param_capacity_grid = '';
 if create_param_capacity_grid == 1
-    if multiple_hubs == 0
-        definition_string = num2str(grid_connection_capacity);
-        param_capacity_grid = strcat('\n\t\tParameter Capacity_grid {\n\t\t\tDefinition: ',definition_string,';\n\t\t}');
-    else
-        definition_string = strcat(num2str(grid_connection_node),':',num2str(grid_connection_capacity));
-        param_capacity_grid = strcat('\n\t\tParameter Capacity_grid {\n\t\t\tIndexDomain: h;\n\t\t\tDefinition: data {',definition_string,'};\n\t\t}');
-    end
+    definition_string = num2str(grid_connection_capacity);
+    param_capacity_grid = strcat('\n\t\tParameter Capacity_grid {\n\t\t\tDefinition: ',definition_string,';\n\t\t}');
 end
 
 %minimum allowable capacities
 param_minimum_capacities = '';
-technology_min_capacities_non_solar = technologies.conversion_techs_min_capacity(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(~strcmp(technologies.conversion_techs_names,'Grid'))));
-non_solar_energy_conversion_technologies = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(~strcmp(technologies.conversion_techs_names,'Grid'))));
+technology_min_capacities_non_solar = unique_technologies.conversion_techs_min_capacity(intersect(find(~strcmp(unique_technologies.conversion_techs_inputs,'Solar')),find(~strcmp(unique_technologies.conversion_techs_names,'Grid'))));
+non_solar_energy_conversion_technologies = unique_technologies.conversion_techs_names(intersect(find(~strcmp(unique_technologies.conversion_techs_inputs,'Solar')),find(~strcmp(unique_technologies.conversion_techs_names,'Grid'))));
 if create_param_minimum_capacities == 1
     definition_string = '';
     for t=1:length(non_solar_energy_conversion_technologies)
@@ -325,8 +320,8 @@ end
 
 %maximum allowable capacities
 param_maximum_capacities = '';
-technology_max_capacities_non_solar = technologies.conversion_techs_max_capacity(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(~strcmp(technologies.conversion_techs_names,'Grid'))));
-non_solar_energy_conversion_technologies = technologies.conversion_techs_names(intersect(find(~strcmp(technologies.conversion_techs_inputs,'Solar')),find(~strcmp(technologies.conversion_techs_names,'Grid'))));
+technology_max_capacities_non_solar = unique_technologies.conversion_techs_max_capacity(intersect(find(~strcmp(unique_technologies.conversion_techs_inputs,'Solar')),find(~strcmp(unique_technologies.conversion_techs_names,'Grid'))));
+non_solar_energy_conversion_technologies = unique_technologies.conversion_techs_names(intersect(find(~strcmp(unique_technologies.conversion_techs_inputs,'Solar')),find(~strcmp(unique_technologies.conversion_techs_names,'Grid'))));
 if create_param_maximum_capacities == 1
     definition_string = '';
     for t=1:length(non_solar_energy_conversion_technologies)
@@ -349,24 +344,24 @@ end
 %minimum allowable capacity grid
 param_min_capacity_grid = '';
 if create_param_min_capacity_grid == 1
-   definition_string = num2str(technologies.conversion_techs_min_capacity(find(strcmp(technologies.conversion_techs_names,'Grid'))));
+   definition_string = num2str(unique_technologies.conversion_techs_min_capacity(find(strcmp(unique_technologies.conversion_techs_names,'Grid'))));
    param_min_capacity_grid = strcat('\n\t\tParameter Min_allowable_capacity_grid {\n\t\t\tDefinition:',definition_string,';\n\t\t}');
 end
 
 %maximum allowable capacity grid
 param_max_capacity_grid = '';
 if create_param_max_capacity_grid == 1
-   definition_string = num2str(technologies.conversion_techs_max_capacity(find(strcmp(technologies.conversion_techs_names,'Grid'))));
+   definition_string = num2str(unique_technologies.conversion_techs_max_capacity(find(strcmp(unique_technologies.conversion_techs_names,'Grid'))));
    param_max_capacity_grid = strcat('\n\t\tParameter Max_allowable_capacity_grid {\n\t\t\tDefinition:',definition_string,';\n\t\t}');
 end
 
 %minimum part load
 param_minimum_part_load = '';
-electricity_technology_minimum_part_load = technologies.conversion_techs_min_part_load(find(ismember(technologies.conversion_techs_outputs,{'Elec','CHP'})));
-heat_technology_minimum_part_load = technologies.conversion_techs_min_part_load(find(ismember(technologies.conversion_techs_outputs,{'Heat','CHP'})));
-cooling_technology_minimum_part_load = technologies.conversion_techs_min_part_load(find(strcmp(technologies.conversion_techs_outputs,'Cool')));
-dhw_technology_minimum_part_load = technologies.conversion_techs_min_part_load(find(strcmp(technologies.conversion_techs_outputs,'DHW')));
-anergy_technology_minimum_part_load = technologies.conversion_techs_min_part_load(find(strcmp(technologies.conversion_techs_outputs,'Anergy')));
+electricity_technology_minimum_part_load = unique_technologies.conversion_techs_min_part_load(find(ismember(unique_technologies.conversion_techs_outputs,{'Elec','CHP'})));
+heat_technology_minimum_part_load = unique_technologies.conversion_techs_min_part_load(find(ismember(unique_technologies.conversion_techs_outputs,{'Heat','CHP'})));
+cooling_technology_minimum_part_load = unique_technologies.conversion_techs_min_part_load(find(strcmp(unique_technologies.conversion_techs_outputs,'Cool')));
+dhw_technology_minimum_part_load = unique_technologies.conversion_techs_min_part_load(find(strcmp(unique_technologies.conversion_techs_outputs,'DHW')));
+anergy_technology_minimum_part_load = unique_technologies.conversion_techs_min_part_load(find(strcmp(unique_technologies.conversion_techs_outputs,'Anergy')));
 
 if create_param_minimum_part_load == 1
     index_domain_string = '';

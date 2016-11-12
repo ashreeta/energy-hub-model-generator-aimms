@@ -42,7 +42,7 @@ if create_param_carbon_factors == 1
         if t>1
             definition_string = strcat(definition_string,', ');
         end
-        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(technologies.conversion_techs_carbon_factors(t)));
+        definition_string = strcat(definition_string,char(energy_conversion_technologies(t)),':',num2str(unique_technologies.conversion_techs_carbon_factors(t)));
     end
     param_carbon_factors = strcat('\n\t\tParameter Technology_carbon_factors {\n\t\t\tIndexDomain: (conv);\n\t\t\tDefinition: data { ',definition_string,' };\n\t\t}');
 end
