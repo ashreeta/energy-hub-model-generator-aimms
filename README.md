@@ -66,7 +66,7 @@ To add a new scenario, create a new directory in the "scenarios" folder (give th
 
 Once you have defined the case study and technologies, and created a scenario file, you're ready to run the EHM Generator.  To set up a run, (1) open the "Main.m" script in the root directory of the project, (2) set the correct system path to the root directory of the project and (3) change the scenario name as appropriate.  Then simply run the Main.m script.  
 
-The script will run for ~30 seconds, then output a file called "energy_hub.ams", located in "aimms_model\energy_hub\MainProject". The EHM Generator will also output a set of input files for Aimms, based on the case study data provided.  These files will be located in "aimms_model\energy_hub", and will automatically be loaded and run by Aimms when the energy hub model is executed. 
+The script will run for 1-3 minutes, then output a file called "energy_hub.ams", located in "aimms_model\energy_hub\MainProject". The EHM Generator will also output a set of input files for Aimms, based on the case study data provided.  These files will be located in "aimms_model\energy_hub", and will automatically be loaded and run by Aimms when the energy hub model is executed. 
 
 #Running your energy hub model
 There are two ways to run your energy hub model, manually and automatically:
