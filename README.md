@@ -58,13 +58,13 @@ If you would like to generate a model for only operational optimization of a giv
 
 ##4. Create a scenario file
 
-The *scenario file* indicates the case study to be analyzed and defines the parameters for a specific experiment to be carried out on that case study.  A scenario file takes the form of a Matlab m-file. Examples of scenario files can be found in the "scenarios" directory in the root directory of the project.  
+A *scenario file* indicates the case study to be analyzed and defines the parameters for a specific experiment to be carried out on that case study.  A scenario file takes the form of a Matlab m-file. Examples of scenario files can be found in the "scenarios" directory in the root directory of the project.  
 
-To add a new scenario, create a new directory in the "scenarios" folder (give the directory any name you wish), and place the m-file defining the scenario parameters within this directory.  The directory may also contain any additional scenario-specific files not included in the "case_study_data" or "technology_data" directories.
+To add a new scenario, create a new directory in the "define_scenarios" folder (give the directory any name you wish), and place the m-file defining the scenario parameters within this directory.  The directory may also contain any additional scenario-specific files not included in the "case_study_data" or "technology_data" directories.
 
 ##5. Run the EHM generator
 
-Once you have defined the case study and technologies, and created a scenario file, you're ready to run the EHM Generator.  To set up a run, (1) open the "Main.m" script in the root directory of the project, (2) set the correct system path to the root directory of the project and (3) change the scenario name as appropriate.  Then simply run the Main.m script.  
+Once you have defined the case study and technologies, and created a scenario file, you're ready to run the EHM Generator.  To set up a run, (1) open the "EHM_Generator.m" script in the root directory of the project, (2) set the correct system path to the root directory of the project and (3) change the scenario name as appropriate.  Then simply run the EHM_Generator.m script.  
 
 The script will run for 1-3 minutes, then output a file called "energy_hub.ams", located in "aimms_model\energy_hub\MainProject". The EHM Generator will also output a set of input files for Aimms, based on the case study data provided.  These files will be located in "aimms_model\energy_hub", and will automatically be loaded and run by Aimms when the energy hub model is executed. 
 
