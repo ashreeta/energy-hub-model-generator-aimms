@@ -40,7 +40,7 @@ In addition to these two files, a several additional files may be optionally cre
 6. a file titled "installed_network_technologies.csv" containing a description of network technologies already installed at the site.
 7. a file titled "network_data.csv" containing a description of the network structure.
 
-Each of these files must be formatted in a specific way, with specific properties defined on each row. See the section below "Formatting of case study input files" for further details. 
+Each of these files must be formatted in a specific way, with specific properties defined on each row. See [Input file specification](https://github.com/hues-platform/energy-hub-model-generator-aimms/blob/master/INPUT_FILE_SPECIFICATION.md) for further details.
 
 For an example of how to structure and format the case study files, see the "testing_case_single_hub" and "testing_case_multihub" folders in the "case_study_data" directory.
 
@@ -48,9 +48,9 @@ For an example of how to structure and format the case study files, see the "tes
 
 If you would like to optimize the selection and sizing of *energy conversion and storage technologies* for a given case, you must define the properties of the technologies to be considered. These should be defined in the "technology_data" directory in the root directory of the project.  
 
-Descriptions of energy conversion and storage technologies should be defined in a "conversion_technology_data.csv" file and a "storage_technology_data.csv"file, respectively, which should be placed within this directory. These files must be formatted in a specific way, with specific properties defined on each row.  See the section below "Formatting of technology input files" for details on how to format these files.
+Descriptions of energy conversion and storage technologies should be defined in a "conversion_technology_data.csv" file and a "storage_technology_data.csv"file, respectively, which should be placed within this directory. These files must be formatted in a specific way, with specific properties defined on each row.  See [Input file specification](https://github.com/hues-platform/energy-hub-model-generator-aimms/blob/master/INPUT_FILE_SPECIFICATION.md) for further details. 
 
-For an example of how to structure and format these files, see the default "conversion_technology_data.csv" and "storage_technology_data.csv" files in this folder. Note: In the current version of the EHM Generator, it is not possible to generate models for optimizing the network technologies or topolocy.
+For an example of how to structure and format these files, see the default "conversion_technology_data.csv" and "storage_technology_data.csv" files in this folder. Note: In the current version of the EHM Generator, it is not possible to generate models for optimizing the network technologies or topology.
 
 If you would like to generate a model for only operational optimization of a given case, it is unnecessary to define these files.
 
