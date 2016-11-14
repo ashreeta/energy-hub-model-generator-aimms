@@ -106,19 +106,4 @@ There are two ways to run your energy hub model, manually and automatically:
 
 Results will be printed to a set of XLSX files in the directory "aimms_model\energy_hub\results".
 
-#Visualizing the results
-
-The results visualization module is still in development.
-
-#Formatting of input data files
-
-The sections below describe in detail how the case study and technology input data files must be formatted.
-
-##Formatting of case study input files
-To be completed
-
-##Formatting of technology input files
-To be completed
-
-#Troubleshooting
 
